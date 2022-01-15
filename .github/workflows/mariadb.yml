@@ -28,10 +28,8 @@ jobs:
     environment: start-stop
     concurrency: start-stop
     runs-on: ubuntu-latest
-    env: 
-     RUN_JOB: 'yes'
     needs: []
-    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push') && env.RUN_JOB == 'no'
+    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push')
     steps:
     - name: Start deployment
       run: |- 
