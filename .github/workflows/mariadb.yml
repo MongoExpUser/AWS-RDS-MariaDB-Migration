@@ -34,7 +34,7 @@ jobs:
     concurrency: start-stop
     runs-on: ubuntu-latest
     needs: []
-    if: (env.RUN_JOB == true)
+    #if: (env.RUN_JOB == true)
     steps:
     - name: Starting deployment
       run: echo "Starting Deployment of RDS MariaDB."
