@@ -20,7 +20,8 @@ env:
   PLAN: false
   APPLY: false
   DESTROY: false
-  RUN_JOB: true
+  VALIDATE: false
+  RUN_JOB: false
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -30,22 +31,22 @@ env:
 jobs:
   start:
     name: start
-    #environment: development
+    environment: start-stop
+    concurrency: start-stop
     runs-on: ubuntu-latest
     needs: []
-    #concurrency: development
+    if: (env.RUN_JOB == true) && ${{ always() }} 
     steps:
     - name: Starting deployment
-      if: (env.manual == false)
       run: echo "Starting Deployment of RDS MariaDB in development environment."
 
   dev-deploy:
     name: dev-deploy
     environment: development
+    concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: env.RUN_JOB == true && ${{ always() }} 
-    concurrency: development
+    if: (env.RUN_JOB == true) && ${{ always() }} 
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -54,33 +55,32 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: (env.MANUAL == false)
       run: terraform init
     - name: Terraform Validate
-      if: (env.MANUAL == false)
+      if: (env.VALIDATE == true)
       run: terraform validate
     - name: Terraform Variables
+      if: (env.PLAN == true) || (env.APPLY == true)
       run: |-
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: (env.PLAN == true) && (env.MANUAL == false)
+      if: (env.PLAN == true)
       run: terraform plan
     - name: Terraform Apply 
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (env.APPLY == true) && (env.MANUAL == false)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (env.APPLY == true) 
       run: terraform apply -var-file=dev.auto.tfvars -auto-approve 
     - name: Terraform Destroy
-      # if: ${{ env.DESTROY == true }} && (env.MANUAL == false)
-      if: (env.DESTROY == true) && (env.MANUAL == false)
+      if: (env.DESTROY == true)
       run: terraform destroy -auto-approve
       
   stage-deploy:
     name: stage-deploy
     environment: staging
+    concurrency: staging
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${{ always() }}
-    concurrency: staging
+    if: (env.RUN_JOB == true) && ${{ always() }} 
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -89,33 +89,33 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: (env.MANUAL == false)
       run: terraform init
     - name: Terraform Validate
-      if: (env.MANUAL == false)
+      if: (env.VALIDATE == true)
       run: terraform validate
     - name: Terraform Variables
+      if: (env.PLAN == true) || (env.APPLY == true)
       run: |-
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: (env.PLAN == true) && (env.MANUAL == false)
+      if: (env.PLAN == true)
       run: terraform plan
     - name: Terraform Apply 
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (env.APPLY == true) && (env.MANUAL == false)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (env.APPLY == true) 
       run: terraform apply -var-file=stage.auto.tfvars -auto-approve 
     - name: Terraform Destroy
-      # if: ${{ env.DESTROY == true }} && (env.MANUAL == false)
-      if: (env.DESTROY == true) && (env.MANUAL == false)
+      if: (env.DESTROY == true)
       run: terraform destroy -auto-approve
+    
     
   prod-deploy:
     name: prod-deploy
     environment: production
+    concurrency: production
     runs-on: ubuntu-latest
-    if: ${{ always() }}
     needs: [start]
-    concurrency: staging
+    if: (env.RUN_JOB == true) && ${{ always() }} 
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -124,35 +124,36 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: (env.MANUAL == false)
       run: terraform init
     - name: Terraform Validate
-      if: (env.MANUAL == false)
+      if: (env.VALIDATE == true)
       run: terraform validate
     - name: Terraform Variables
+      if: (env.PLAN == true) || (env.APPLY == true)
       run: |-
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: (env.PLAN == true) && (env.MANUAL == false)
+      if: (env.PLAN == true)
       run: terraform plan
     - name: Terraform Apply 
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (env.APPLY == true) && (env.MANUAL == false)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (env.APPLY == true) 
       run: terraform apply -var-file=prod.auto.tfvars -auto-approve 
     - name: Terraform Destroy
-      # if: ${{ env.DESTROY == true }} && (env.MANUAL == false)
-      if: (env.DESTROY == true) && (env.MANUAL == false)
+      if: (env.DESTROY == true)
       run: terraform destroy -auto-approve
+    
       
   stop:
     name: stop
-    #environment: development
+    environment: start-stop
+    concurrency: start-stop
     runs-on: ubuntu-latest
-    if: ${{ always() }}
     needs: [dev-deploy, stage-deploy, prod-deploy]
-    #concurrency: development
+    if: env.RUN_JOB == true && ${{ always() }} 
     steps:
     - name: Start deployment
-      if: (env.manual == false)
-      run: echo "Stopped Deployment of RDS MariaDB."
+      run: echo "Stopping Deployment of RDS MariaDB."
+   
    # [skip ci] 
+   # if: ${{ env.DESTROY == true }}
