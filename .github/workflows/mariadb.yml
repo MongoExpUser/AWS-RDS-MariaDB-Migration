@@ -44,6 +44,7 @@ jobs:
     environment: development
     runs-on: ubuntu-latest
     needs: [start]
+    if: ${{ always() }}
     concurrency: development
     #if: github.event_name == 'pull_request'
     steps:
@@ -79,6 +80,7 @@ jobs:
     environment: staging
     runs-on: ubuntu-latest
     needs: [start]
+    if: ${{ always() }}
     concurrency: staging
     steps:
     - name: GitHub Actions Runner Set-up
@@ -112,6 +114,7 @@ jobs:
     name: prod-deploy
     environment: production
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     needs: [start]
     concurrency: staging
     steps:
@@ -146,6 +149,7 @@ jobs:
     name: stop
     #environment: development
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     needs: [dev-deploy, stage-deploy, prod-deploy]
     #concurrency: development
     steps:
