@@ -5,7 +5,7 @@ This README summaries the contents of this repository.
 
 ### What is this repository for? ###
 * Deployment of AWS RDS MariaDB instances (primary & replica(s)) and related resources for database migration.
-* The number of replica can vary between 1 and 5. If the number of replica is set to zero on the **.tfvara file**, no replica is deployed.
+* The number of replica can vary between 1 and 5. If the number of replica is set to zero on the **.tfvars file**, no replica is deployed.
 * Version 1.0
 
 ### Deployed resoures ###
