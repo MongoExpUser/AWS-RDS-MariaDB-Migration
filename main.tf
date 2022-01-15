@@ -89,12 +89,6 @@ resource "aws_db_parameter_group" "db_parameter_group" {
   family                        = var.db_parameter_group_family
   description                   = var.db_parameter_group_description
 
-  parameter {
-    name                        = var.db_parameter_name_one
-    value                       = var.db_parameter_name_one_value
-    apply_method                = var.db_parameter_group_apply_method
-  }
-
   tags = merge(
     {
         name                    = "${var.org_identifier}-${var.environment}-${var.db_parameter_group_name}-${substr(random_uuid.secret_random_uuid.result, 0, 4)}"
