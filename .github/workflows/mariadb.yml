@@ -33,7 +33,7 @@ jobs:
      RUN_JOB: 'yes'
     needs: []
     #if: ${env.RUN_JOB} == true
-    if: ${{ github.RUN_JOB == 'yes' }}
+    if: ${{ github.RUN_JOB == 'no' }}
     steps:
     - name: Start deployment
       run: echo "Starting Deployment of RDS MariaDB." 
