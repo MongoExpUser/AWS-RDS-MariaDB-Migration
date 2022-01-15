@@ -38,7 +38,7 @@ jobs:
     if: (env.RUN_JOB == true) && ${{ always() }} 
     steps:
     - name: Starting deployment
-      run: echo "Starting Deployment of RDS MariaDB in development environment."
+      run: echo "Starting Deployment of RDS MariaDB."
 
   dev-deploy:
     name: dev-deploy
@@ -46,7 +46,7 @@ jobs:
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: (env.RUN_JOB == true) && ${{ always() }} 
+    if: (env.RUN_JOB == true) #&& ${{ always() }} 
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
