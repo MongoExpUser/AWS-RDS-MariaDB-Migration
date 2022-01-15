@@ -67,7 +67,7 @@ jobs:
       run: terraform apply -var-file=dev.auto.tfvars -auto-approve 
     - name: Terraform Destroy
       if: (env.DESTROY == true)
-      run: terraform destroy -auto-approve
+      run: terraform destroy -auto-approve 
       
   stage-deploy:
     name: stage-deploy
