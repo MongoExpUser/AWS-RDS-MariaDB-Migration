@@ -16,7 +16,6 @@ defaults:
     
 env:
   # these env variables are available to all jobs
-  MANUAL: true
   PLAN: false
   APPLY: false
   DESTROY: false
@@ -35,7 +34,7 @@ jobs:
     concurrency: start-stop
     runs-on: ubuntu-latest
     needs: []
-    if: (env.RUN_JOB == true) && ${{ always() }} 
+    if: (env.RUN_JOB == true)
     steps:
     - name: Starting deployment
       run: echo "Starting Deployment of RDS MariaDB."
@@ -46,7 +45,7 @@ jobs:
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: (env.RUN_JOB == true) #&& ${{ always() }} 
+    if: (env.RUN_JOB == true)
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -80,7 +79,7 @@ jobs:
     concurrency: staging
     runs-on: ubuntu-latest
     needs: [start]
-    if: (env.RUN_JOB == true) && ${{ always() }} 
+    if: (env.RUN_JOB == true) 
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -115,7 +114,7 @@ jobs:
     concurrency: production
     runs-on: ubuntu-latest
     needs: [start]
-    if: (env.RUN_JOB == true) && ${{ always() }} 
+    if: (env.RUN_JOB == true) 
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -157,3 +156,4 @@ jobs:
    
    # [skip ci] 
    # if: ${{ env.DESTROY == true }}
+   # if: ${{ always() }} 
