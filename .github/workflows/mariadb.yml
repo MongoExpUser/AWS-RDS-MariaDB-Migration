@@ -7,7 +7,11 @@ on:
   pull_request:
    # matches pull request for all branches and tag namee
   workflow_dispatch:
-   #
+   inputs:
+      job:
+        description: Initial job to run for manual trigger.
+        required: true
+        default: dev-start-1
 
 jobs:
   dev-start-1:
