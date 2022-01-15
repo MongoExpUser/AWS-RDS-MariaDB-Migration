@@ -19,7 +19,7 @@ jobs:
     env:
       manual: true
     steps:
-    - name: Start deployment
+    - name: Starting deployment
       if: (env.manual == false)
       run: echo "Starting Deployment of RDS MariaDB in development environment."
 
@@ -115,3 +115,19 @@ jobs:
       if: (env.DESTROY == true) && (env.MANUAL == false)
       run: terraform destroy -auto-approve
       # [skip ci]
+      
+      
+  stop:
+    name: stop
+    environment: development
+    runs-on: ubuntu-latest
+    needs: [dev-deploy, stage-deploy]
+    defaults:
+      run:
+        shell: bash
+    env:
+      manual: true
+    steps:
+    - name: Start deployment
+      if: (env.manual == false)
+      run: echo "Stopped Deployment of RDS MariaDB."
