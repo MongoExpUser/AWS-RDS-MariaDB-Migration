@@ -6,6 +6,8 @@ on:
     - main
   pull_request:
    # matches pull request for all branches and tag namee
+  workflow_dispatch:
+   #
 
 jobs:
   dev-start-1:
