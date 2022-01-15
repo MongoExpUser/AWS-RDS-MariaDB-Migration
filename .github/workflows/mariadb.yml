@@ -31,22 +31,21 @@ jobs:
     env: 
      RUN_JOB: 'yes'
     needs: []
-    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push')
+    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push') && env.RUN_JOB == 'no'
     steps:
     - name: Start deployment
       run: |- 
         echo "Starting Deployment of RDS MariaDB." 
         echo "2nd." 
         echo ${{ env.RUN_JOB}}
-      
-      
+
   dev-deploy:
     name: dev-deploy
     environment: development
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push') && env.RUN_JOB == 'yes'
+    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push')
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
