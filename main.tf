@@ -25,9 +25,6 @@
 # *                                                                                                                *
 # ******************************************************************************************************************
 
-variable "aws_state_bucket_name" {}
-variable "aws_state_region" {}
-variable "aws_state_key" {}
 
 # configure provider(s) and backend
 terraform {
@@ -42,12 +39,19 @@ terraform {
     }
   }
 
+ 
+  backend "local" {
+
+  }
+  
+  /*
   backend "s3" {
-    bucket  = var.aws_state_bucket_name
-    key     = "${var.aws_state_key}-terraform.tfstate"
-    region  = var.aws_state_region
+    bucket  = "comp-bck-name"
+    key     = "rds-mariadb/terraform.tfstate"
+    region  = "us-east-1"
     encrypt = true
   }
+  */
   
 }
 
