@@ -152,4 +152,4 @@ jobs:
     - name: Start deployment
       if: (env.manual == false)
       run: echo "Stopped Deployment of RDS MariaDB."
-   # [skip ci]
+   # [skip ci] 
