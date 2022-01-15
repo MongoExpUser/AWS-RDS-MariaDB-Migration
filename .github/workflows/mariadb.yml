@@ -8,8 +8,8 @@ on:
    # matches pull request for all branches and tag namee
 
 jobs:
-  dev-start-1:
-    name: dev-start-1
+  dev-start:
+    name: dev-start
     environment: development
     runs-on: ubuntu-latest
     needs: []
@@ -23,11 +23,11 @@ jobs:
       if: (env.manual == true)
       run: echo "Starting Deployment of RDS MariaDB in development environment."
 
-  dev-deploy-mariadb-2:
+  dev-deploy:
     name: dev-deploy-mariadb-2
     environment: development
     runs-on: ubuntu-latest
-    needs: [dev-start-1]
+    needs: [dev-start]
     defaults:
       run:
         shell: bash
