@@ -27,8 +27,10 @@ jobs:
     environment: start-stop
     concurrency: start-stop
     runs-on: ubuntu-latest
+    env: 
+     RUN_JOB: 'yes'
     needs: []
-    if:  ${{ secrets.RUN_JOB }} == 'yes'
+    if:  env.RUN_JOB == 'yes'
     steps:
     - name: Start deployment
       run: echo "Starting Deployment of RDS MariaDB." 
