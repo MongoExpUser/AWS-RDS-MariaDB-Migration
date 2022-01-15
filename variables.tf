@@ -64,18 +64,6 @@ variable "db_parameter_group_description" {
   type = string
 }
 
-variable "db_parameter_name_one" {
-  type = string
-}
-
-variable "db_parameter_name_one_value" {
-  type = string
-}
-
-variable "db_parameter_group_apply_method" {
-  type = string
-}
-
 
 # 3. security group variables
 variable "security_group_name" {
