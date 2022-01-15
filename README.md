@@ -1,3 +1,4 @@
+[![CI - MariaDB Migration](https://github.com/MongoExpUser/AWS-RDS-MariaDB-Migration/actions/workflows/mariadb.yml/badge.svg)](https://github.com/MongoExpUser/AWS-RDS-MariaDB-Migration/actions/workflows/mariadb.yml)
 # README #
 
 This README summaries the contents of this repository.
