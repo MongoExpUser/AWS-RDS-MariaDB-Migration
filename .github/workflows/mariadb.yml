@@ -32,7 +32,7 @@ jobs:
     concurrency: start-stop
     runs-on: ubuntu-latest
     needs: []
-    #if: (env.RUN_JOB == true)
+    if: ($RUN_JOB == true)
     steps:
     - name: Start deployment
       run: echo "Starting Deployment of RDS MariaDB." 
@@ -44,7 +44,7 @@ jobs:
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    #if: (env.RUN_JOB == true)
+    if: $RUN_JOB == true
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -78,7 +78,7 @@ jobs:
     concurrency: staging
     runs-on: ubuntu-latest
     needs: [start]
-    #if: (env.RUN_JOB == true) 
+    if: $RUN_JOB == true
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -113,7 +113,7 @@ jobs:
     concurrency: production
     runs-on: ubuntu-latest
     needs: [start]
-    if: env.RUN_JOB == true
+    if: $RUN_JOB == true
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -147,7 +147,7 @@ jobs:
     concurrency: start-stop
     runs-on: ubuntu-latest
     needs: [dev-deploy, stage-deploy, prod-deploy]
-    #if: (env.RUN_JOB == true) && ${{ always() }} 
+    if: $RUN_JOB == true) && ${{ always() }} 
     steps:
     - name: Stop deployment
       run: echo "Stopping Deployment of RDS MariaDB."
