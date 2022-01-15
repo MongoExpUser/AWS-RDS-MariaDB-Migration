@@ -94,7 +94,7 @@ jobs:
     - name: Terraform Variables
       if: (env.PLAN == true) || (env.APPLY == true)
       run: |-
-        cat dev.auto.tfvars <<EOF
+        cat stage.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
       if: (env.PLAN == true)
@@ -129,7 +129,7 @@ jobs:
     - name: Terraform Variables
       if: (env.PLAN == true) || (env.APPLY == true)
       run: |-
-        cat dev.auto.tfvars <<EOF
+        cat prod.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
       if: (env.PLAN == true)
@@ -141,7 +141,6 @@ jobs:
       if: (env.DESTROY == true)
       run: terraform destroy -auto-approve
     
-      
   stop:
     name: stop
     environment: start-stop
