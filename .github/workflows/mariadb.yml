@@ -36,12 +36,13 @@ jobs:
       PLAN: false
       APPLY: false
       DESTROY: false
+      TEST: 'yes'
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #if: ${{ env.MANUAL == false}}
-    if: github.event_name == 'pull_request'
+    if: env.TEST == 'no'
+    #if: github.event_name == 'pull_request'
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
