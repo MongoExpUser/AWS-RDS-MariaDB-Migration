@@ -8,8 +8,8 @@ on:
    # matches pull request for all branches and tag namee
 
 jobs:
-  dev-start:
-    name: dev-start
+  start:
+    name: start
     environment: development
     runs-on: ubuntu-latest
     needs: []
@@ -24,10 +24,10 @@ jobs:
       run: echo "Starting Deployment of RDS MariaDB in development environment."
 
   dev-deploy:
-    name: dev-deploy-mariadb-2
+    name: dev-deploy
     environment: development
     runs-on: ubuntu-latest
-    needs: [dev-start]
+    needs: [start]
     defaults:
       run:
         shell: bash
@@ -48,8 +48,10 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
+      if: (env.MANUAL == false)
       run: terraform init
     - name: Terraform Validate
+      if: (env.MANUAL == false)
       run: terraform validate
     - name: Terraform Variables
       run: |-
@@ -61,6 +63,53 @@ jobs:
     - name: Terraform Apply 
       if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (env.APPLY == true) && (env.MANUAL == false)
       run: terraform apply -var-file=dev.auto.tfvars -auto-approve 
+    - name: Terraform Destroy
+      # if: ${{ env.DESTROY == true }} && (env.MANUAL == false)
+      if: (env.DESTROY == true) && (env.MANUAL == false)
+      run: terraform destroy -auto-approve
+      # [skip ci]
+      
+      
+  stage-deploy:
+    name: stage-deploy
+    environment: staging
+    runs-on: ubuntu-latest
+    needs: [start]
+    defaults:
+      run:
+        shell: bash
+    env:
+      MANUAL: true
+      PLAN: false
+      APPLY: false
+      DESTROY: false
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+    - name: GitHub Actions Runner Set-up
+      uses: actions/checkout@v2
+    - name: Terraform Repo Security Scan Set-up
+      uses: triat/terraform-security-scan@v3
+    - name: Terraform CLI Set-up
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Init
+      if: (env.MANUAL == false)
+      run: terraform init
+    - name: Terraform Validate
+      if: (env.MANUAL == false)
+      run: terraform validate
+    - name: Terraform Variables
+      run: |-
+        cat dev.auto.tfvars <<EOF
+        EOF
+    - name: Terraform Plan
+      if: (env.PLAN == true) && (env.MANUAL == false)
+      run: terraform plan
+    - name: Terraform Apply 
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (env.APPLY == true) && (env.MANUAL == false)
+      run: terraform apply -var-file=stage.auto.tfvars -auto-approve 
     - name: Terraform Destroy
       # if: ${{ env.DESTROY == true }} && (env.MANUAL == false)
       if: (env.DESTROY == true) && (env.MANUAL == false)
