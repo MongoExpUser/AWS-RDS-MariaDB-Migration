@@ -25,6 +25,9 @@
 # *                                                                                                                *
 # ******************************************************************************************************************
 
+variable "aws_state_bucket_name" {}
+variable "aws_state_region" {}
+variable "aws_state_key" {}
 
 # configure provider(s) and backend
 terraform {
@@ -39,11 +42,10 @@ terraform {
     }
   }
 
-
   backend "s3" {
-    bucket  = var.state_bucket_name
-    key     = "${var.state_key}-terraform.tfstate"
-    region  = var.state_region
+    bucket  = var.aws_state_bucket_name
+    key     = "${var.aws_state_key}-terraform.tfstate"
+    region  = var.aws_state_region
     encrypt = true
   }
   
