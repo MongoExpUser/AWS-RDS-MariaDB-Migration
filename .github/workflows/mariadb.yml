@@ -1,0 +1,65 @@
+name: CI - MariaDB Migration
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+   # matches pull request for all branches and tag namee
+
+jobs:
+  dev-start-1:
+    name: dev-start-1
+    environment: development
+    runs-on: ubuntu-latest
+    needs: []
+    defaults:
+      run:
+        shell: bash
+
+  dev-deploy-mariadb-2:
+    name: dev-deploy-mariadb-2
+    environment: development
+    runs-on: ubuntu-latest
+    needs: [dev-start-1]
+    defaults:
+      run:
+        shell: bash
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    
+    steps:
+    - name: GitHub Actions Runner Set-up
+      uses: actions/checkout@v2
+      
+    - name: Terraform Repo Security Scan Set-up
+      uses: triat/terraform-security-scan@v3
+      
+    - name: Terraform CLI Set-up
+      uses: hashicorp/setup-terraform@v1
+      
+    - name: Terraform Init
+      run: terraform init
+      
+    - name: Terraform Validate
+      run: terraform validate
+      
+    - name: Terraform Variables
+      run: |-
+        cat dev.auto.tfvars <<EOF
+        EOF
+    
+    - name: Terraform Plan
+      if:  (env.PLAN == 'yes')
+      run: terraform plan
+      
+    - name: Terraform Apply 
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && env.APPLY == 'yes'
+      run: terraform apply -var-file=dev.auto.tfvars -auto-approve 
+
+    - name: Terraform Destroy
+      if: ${{ env.DESTROY == 'yes' }}
+      run: terraform destroy -auto-approve
