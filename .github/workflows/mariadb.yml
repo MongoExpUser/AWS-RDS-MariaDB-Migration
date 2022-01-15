@@ -8,6 +8,7 @@ on:
   pull_request:
   
 env:
+    INIT: false
     PLAN: false
     APPLY: false
     DESTROY: false
@@ -31,7 +32,8 @@ jobs:
     env: 
      RUN_JOB: 'yes'
     needs: []
-     #if: ${env.RUN_JOB} == true
+    #if: ${env.RUN_JOB} == true
+    if: ${{ github.RUN_JOB == 'yes' }}
     steps:
     - name: Start deployment
       run: echo "Starting Deployment of RDS MariaDB." 
@@ -52,6 +54,7 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
+      if: (env.INIT == true)
       run: terraform init
     - name: Terraform Validate
       if: (env.VALIDATE == true)
@@ -86,6 +89,7 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
+      if: (env.INIT == true)
       run: terraform init
     - name: Terraform Validate
       if: (env.VALIDATE == true)
@@ -121,6 +125,7 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
+      if: (env.INIT == true)
       run: terraform init
     - name: Terraform Validate
       if: (env.VALIDATE == true)
