@@ -35,7 +35,7 @@ jobs:
     #if: (env.RUN_JOB == true)
     steps:
     - name: Start deployment
-      run: echo "Starting Deployment of RDS MariaDB."
+      run: echo "Starting Deployment of RDS MariaDB." 
       
       
   dev-deploy:
