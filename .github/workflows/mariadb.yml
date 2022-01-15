@@ -29,7 +29,7 @@ jobs:
     concurrency: start-stop
     runs-on: ubuntu-latest
     needs: []
-    if: ${env.RUN_JOB} == true
+    #if: ${env.RUN_JOB} == true
     steps:
     - name: Start deployment
       run: echo "Starting Deployment of RDS MariaDB." 
@@ -41,7 +41,7 @@ jobs:
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${env.RUN_JOB} == true
+    #if: ${env.RUN_JOB} == true
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
