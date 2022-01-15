@@ -40,7 +40,7 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    if: (env.MANUAL == true) #${{ env.MANUAL == true }}
+    if: ${{ env.MANUAL == false}}
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -167,7 +167,7 @@ jobs:
     name: stop
     environment: development
     runs-on: ubuntu-latest
-    needs: [dev-deploy, stage-deploy]
+    needs: [dev-deploy, stage-deploy, prod-deploy]
     defaults:
       run:
         shell: bash
