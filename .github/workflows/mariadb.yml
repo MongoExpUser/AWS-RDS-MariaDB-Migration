@@ -16,17 +16,17 @@ on:
     - main
   pull_request:
   # matches pull request for all branches and tag name
-  
+    
+defaults:
+  run:
+    shell: bash
+
 env:
   APPLY: false
   DESTROY: false
   INIT: true
   PLAN: true
   VALIDATE: false
-    
-defaults:
-  run:
-    shell: bash
 
 jobs:
   start:
@@ -63,6 +63,7 @@ jobs:
     - name: Terraform Variables
       if: ${{ env.PLAN == true }} || ${{ env.APPLY == true }}
       run: |-
+        echo $PLAN
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
