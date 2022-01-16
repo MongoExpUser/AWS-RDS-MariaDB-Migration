@@ -55,27 +55,18 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      run: |-
-        if: $INIT == true
-        terraform init
+      run: if [[ $INIT = true ]]; then terraform init fi
     - name: Terraform Validate
-      run: |-
-        if: $VALIDATE == true
-        terraform validate
+      run: if [[ $VALIDATE = true ]]; then terraform validate; fi
     - name: Terraform Variables
       run: |-
-        if: $PLAN == true || $APPLY == true
-        cat dev.auto.tfvars <<EOF
-        EOF
+        if [[ $PLAN = true ] || $APPLY = true ]]; then 
+          cat dev.auto.tfvars <<EOF
+          EOF;
+        fi
     - name: Terraform Plan
-      run: |-
-        if: $PLAN == true
-        terraform plan
+      run: if [[ $PLAN = true ]]; then terraform plan; fi
     - name: Terraform Apply
-      run: |-
-        if: $APPLY == true
-        terraform apply -var-file=dev.auto.tfvars -auto-approve
+      run: if [[ $APPLY = true ]]; then terraform apply -var-file=dev.auto.tfvars -auto-approve; fi
     - name: Terraform Destroy
-      run: |-
-        if: $DESTROY == true
-        terraform destroy -auto-approve
+      run: if [[ $DESTROY = true ]]; then terraform destroy -auto-approve; fi
