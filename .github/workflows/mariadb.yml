@@ -58,12 +58,11 @@ jobs:
     #  run: if [[ $INIT = true ]]; then terraform init; fi
     #- name: Terraform Validate
     #  run: if [[ $VALIDATE = true ]]; then terraform validate; fi
-    #- name: Terraform Variables
-    #  if: ${{ env.PLAN == true }} || ${{ env.APPLY == true }}
-    #  run: |-
-    #    echo $PLAN
-    #    cat dev.auto.tfvars <<EOF
-    #    EOF
+    - name: Terraform Variables
+      run: |-
+        if [[ $PLAN = true || $APPLY = true]]; then \
+        cat dev.auto.tfvars <<EOF
+        EOF
     - name: Terraform Plan
       run: if [[ $PLAN = true ]]; then terraform init; terraform validate; terraform plan -var-file=dev.auto.tfvars; fi
     - name: Terraform Apply
