@@ -8,11 +8,8 @@ on:
   # matches pull request for all branches and tag name
   
 env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    AWS_REGION: ${{ secrets.AWS_REGION }}
-    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+  RUN_JOB: true
+    
 defaults:
   run:
     shell: bash
@@ -27,9 +24,7 @@ jobs:
     if: (github.ref == 'refs/heads/main') && (github.event_name == 'push')
     steps:
     - name: Start deployment
-      run: |- 
-        echo "Starting Deployment of RDS MariaDB".
-        echo ${{ secrets.AWS_REGION }}
+      run: echo "Starting Deployment of RDS MariaDB.".
         
   dev-deploy:
     name: dev-deploy
