@@ -20,7 +20,14 @@ on:
 defaults:
   run:
     shell: bash
-
+    
+env:
+  APPLY: false
+  DESTROY: false
+  INIT: true
+  PLAN: true
+  VALIDATE: true
+      
 jobs:
   start:
     name: start
@@ -34,12 +41,6 @@ jobs:
       run: echo "Starting Deployment of RDS MariaDB.".
 
   dev-deploy:
-    env:
-      APPLY: false
-      DESTROY: false
-      INIT: true
-      PLAN: true
-      VALIDATE: false
     name: dev-deploy
     environment: development
     concurrency: development
@@ -53,23 +54,19 @@ jobs:
     #  uses: triat/terraform-security-scan@v3
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
-    - name: Terraform Init
-      run: if [[ $INIT = true ]]; then terraform init; fi
-    - name: Terraform Validate
-      if: ${{ env.VALIDATE == true }}
-      run: terraform validate
-    - name: Terraform Variables
-      if: ${{ env.PLAN == true }} || ${{ env.APPLY == true }}
-      run: |-
-        echo $PLAN
-        cat dev.auto.tfvars <<EOF
-        EOF
+    #- name: Terraform Init
+    #  run: if [[ $INIT = true ]]; then terraform init; fi
+    #- name: Terraform Validate
+    #  run: if [[ $VALIDATE = true ]]; then terraform validate; fi
+    #- name: Terraform Variables
+    #  if: ${{ env.PLAN == true }} || ${{ env.APPLY == true }}
+    #  run: |-
+    #    echo $PLAN
+    #    cat dev.auto.tfvars <<EOF
+    #    EOF
     - name: Terraform Plan
-      if: ${{ env.PLAN == true }}
-      run: terraform plan
+      run: if [[ $PLAN = true ]]; then terraform init; terraform validate; terraform plan -var-file=dev.auto.tfvars; fi
     - name: Terraform Apply
-      if: ${{ env.APPLY == true }}
-      run: terraform apply -var-file=dev.auto.tfvars -auto-approve
+      run: if [[ $APPLY = true ]]; then then terraform init; terraform validate; terraform apply -var-file=dev.auto.tfvars -auto-approve; fi
     - name: Terraform Destroy
-      if: ${{ env.DESTROY == true }}
-      run: terraform destroy -auto-approve
+      run: if [[ $DESTROY = true ]]; then terraform init; terraform validate; terraform destroy -auto-approve; fi
