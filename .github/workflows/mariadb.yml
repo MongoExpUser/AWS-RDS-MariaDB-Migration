@@ -54,8 +54,7 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: env.INIT == true
-      run: terraform init
+      run: if [[ $INIT = true ]]; then terraform init; fi
     - name: Terraform Validate
       if: ${{ env.VALIDATE == true }}
       run: terraform validate
