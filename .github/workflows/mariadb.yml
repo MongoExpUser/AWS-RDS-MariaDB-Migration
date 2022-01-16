@@ -66,3 +66,4 @@ jobs:
       run: if [[ $APPLY = true ]]; then terraform apply -var-file=dev.auto.tfvars -auto-approve; fi
     - name: Terraform Destroy
       run: if [[ $DESTROY = true ]]; then terraform destroy -auto-approve; fi
+      
