@@ -56,18 +56,69 @@ jobs:
       run: if [[ $INIT = true ]]; then terraform init; fi
     - name: Terraform Validate
       run: if [[ $VALIDATE = true ]]; then terraform validate; fi
-    - name: Terraform Variables
-      run: |
-         cat dev.auto.tfvars <<EOF
-         EOF
     - name: Terraform Plan
-      run: |
-        pwd
-        ls
-        if [[ $PLAN = true ]]; then terraform plan; fi
-        
+      run: if [[ $PLAN = true ]]; then terraform plan -var-file=dev.auto.tfvars; fi
     - name: Terraform Apply
       run: if [[ $APPLY = true ]]; then terraform apply -var-file=dev.auto.tfvars -auto-approve; fi
     - name: Terraform Destroy
       run: if [[ $DESTROY = true ]]; then terraform destroy -auto-approve; fi
       
+  stage-deploy:
+    name: stage-deploy
+    environment: staging
+    concurrency: staging
+    runs-on: ubuntu-latest
+    needs: [start]
+    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name != 'push') }}
+    steps:
+    - name: GitHub Actions Runner Set-up
+      uses: actions/checkout@v2
+    - name: Terraform CLI Set-up
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Init
+      run: if [[ $INIT = true ]]; then terraform init; fi
+    - name: Terraform Validate
+      run: if [[ $VALIDATE = true ]]; then terraform validate; fi
+    - name: Terraform Plan
+      run: if [[ $PLAN = true ]]; then terraform plan -var-file=stage.auto.tfvars; fi
+    - name: Terraform Apply
+      run: if [[ $APPLY = true ]]; then terraform apply -var-file=stage.auto.tfvars -auto-approve; fi
+    - name: Terraform Destroy
+      run: if [[ $DESTROY = true ]]; then terraform destroy -auto-approve; fi
+    
+  prod-deploy:
+    name: prod-deploy
+    environment: production
+    concurrency: production
+    runs-on: ubuntu-latest
+    needs: [start]
+    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name != 'push') }}
+    steps:
+    - name: GitHub Actions Runner Set-up
+      uses: actions/checkout@v2
+    - name: Terraform CLI Set-up
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Init
+      run: if [[ $INIT = true ]]; then terraform init; fi
+    - name: Terraform Validate
+      run: if [[ $VALIDATE = true ]]; then terraform validate; fi
+    - name: Terraform Plan
+      run: if [[ $PLAN = true ]]; then terraform plan -var-file=prod.auto.tfvars; fi
+    - name: Terraform Apply
+      run: if [[ $APPLY = true ]]; then terraform apply -var-file=prod.auto.tfvars -auto-approve; fi
+    - name: Terraform Destroy
+      run: if [[ $DESTROY = true ]]; then terraform destroy -auto-approve; fi
+    
+  stop:
+    name: stop
+    environment: start-stop
+    concurrency: start-stop
+    runs-on: ubuntu-latest
+    # needs: [dev-deploy, stage-deploy, prod-deploy] # set for dev, stage and prod environments
+    needs: [dev-deploy] # set for only dev environment
+    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }}
+    steps:
+    - name: Stop Deployment
+      run: echo "Stopping Deployment of RDS MariaDB."
+   
+  # [skip ci]: skip workflows comment
