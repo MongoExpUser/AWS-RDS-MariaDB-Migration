@@ -1,5 +1,5 @@
 # ******************************************************************************************************************
-# *  stage.auto.tfvars                                                                                             *
+# *  stage.auto.tfvars                                                                                               *
 # ******************************************************************************************************************
 # *                                                                                                                *
 # *  Project: Migration Project                                                                                    *
@@ -47,16 +47,16 @@ random_password_length                    = 20
 random_password_true                      = true
 random_password_override_special          = "!#$&*()-_=[]{}<>:?"
 recovery_window_in_days                   = 7
-secret_description                        = "Mgr Postgres Credentials"
-secret_tag_value                          = "mgr-postgres-credentials"
-aws_secretsmanager_secret_name            = "mgr-postgres-secret"
+secret_description                        = "Mgr MariaDB Credentials"
+secret_tag_value                          = "mgr-mariadb-credentials"
+aws_secretsmanager_secret_name            = "mgr-mariadb-secret"
 username                                  = "admin"
 
 # 5. rds monitoring role variable(s)
 rds_monitoring_role_name                  = "rds-monitoring-role"
 
 # 6. primary and replica instances' variables
-database_name                             = "migrationDB"
+database_name                             = "natgasDB"
 instance_identifier                       = "mgr"
 allocated_storage                         = 20
 max_allocated_storage                     = 50
