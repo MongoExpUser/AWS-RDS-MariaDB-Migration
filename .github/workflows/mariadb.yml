@@ -9,11 +9,11 @@ on:
   
 env:
   RUN_JOB: true
-  APPLY: f${{ env.APPLY }}
-  DESTROY: ${{ env.DESTROY }}
-  INIT: ${{ env.INIT }}
-  PLAN: f${{ env.PLAN }}
-  VALIDATE: ${{ env.VALIDATE }}
+  APPLY: f${{ secrets.APPLY }}
+  DESTROY: ${{ secrets.DESTROY }}
+  INIT: ${{ secrets.INIT }}
+  PLAN: f${{ secrets.PLAN }}
+  VALIDATE: ${{ secrets.VALIDATE }}
     
 defaults:
   run:
