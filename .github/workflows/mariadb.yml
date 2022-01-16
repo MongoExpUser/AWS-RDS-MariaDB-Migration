@@ -64,7 +64,7 @@ jobs:
         terraform validate
     - name: Terraform Variables
       run: |-
-        if:($PLAN == true) || ($APPLY == true)
+        if: $PLAN == true || $APPLY == true
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
