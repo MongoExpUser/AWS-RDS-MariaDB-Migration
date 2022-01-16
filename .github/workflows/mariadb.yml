@@ -72,7 +72,7 @@ jobs:
     concurrency: staging
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }}
+    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name != 'push') }}
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -107,7 +107,7 @@ jobs:
     concurrency: production
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }}
+    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name != 'push') }}
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
