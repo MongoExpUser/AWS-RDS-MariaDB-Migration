@@ -30,7 +30,7 @@ jobs:
     - name: Start Deployment
       run: echo "Starting Deployment of RDS MariaDB.".
     - name: Confirm Plan
-      run: echo ${{ env.PLAN }}
+      run: echo "${{ env.PLAN }}"
         
   dev-deploy:
     name: dev-deploy
