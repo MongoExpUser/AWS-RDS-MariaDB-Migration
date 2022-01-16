@@ -8,8 +8,8 @@ on:
   # matches pull request for all branches and tag name
   
 env:
-  RUN_JOB: true
-  APPLY: f${{ secrets.APPLY }}
+  RUN_JOB: false #${{ secrets.RUN_JOB }}
+  APPLY: ${{ secrets.APPLY }}
   DESTROY: ${{ secrets.DESTROY }}
   INIT: ${{ secrets.INIT }}
   PLAN: f${{ secrets.PLAN }}
@@ -37,7 +37,7 @@ jobs:
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }}
+    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }} && (env.RUN_JOB == true)
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
