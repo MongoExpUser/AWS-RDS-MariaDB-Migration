@@ -8,7 +8,6 @@ on:
   # matches pull request for all branches and tag name
   
 env:
-  RUN_JOB: false #${{ secrets.RUN_JOB }}
   APPLY: ${{ secrets.APPLY }}
   DESTROY: ${{ secrets.DESTROY }}
   INIT: ${{ secrets.INIT }}
@@ -141,8 +140,9 @@ jobs:
     environment: start-stop
     concurrency: start-stop
     runs-on: ubuntu-latest
-    needs: [dev-deploy, stage-deploy, prod-deploy]
-    if: always() && ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }}
+    # needs: [dev-deploy, stage-deploy, prod-deploy] # set for dev, stage and prod environments
+    needs: [dev-deploy] # set for only dev environment
+    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }}
     steps:
     - name: Stop Deployment
       run: echo "Stopping Deployment of RDS MariaDB."
