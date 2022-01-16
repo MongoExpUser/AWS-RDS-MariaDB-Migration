@@ -8,8 +8,7 @@ on:
   # matches pull request for all branches and tag name
   
 env:
-  RUN_JOB_YES: 'RUN JOB - YES'
-  RUN_JOB_NO: 'RUN JOB - NO'
+  RUN_JOB: true
     
 defaults:
   run:
@@ -22,7 +21,7 @@ jobs:
     concurrency: start-stop
     runs-on: ubuntu-latest
     needs: []
-    if: ${{ contains(github.event.head_commit.message, ${{ env.RUN_JOB_YES) }} }}
+    if: ${{ contains(github.event.head_commit.message, 'RUN JOB' }}
     steps:
     - name: Start deployment
       run: echo "Starting Deployment of RDS MariaDB.".
@@ -33,7 +32,7 @@ jobs:
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${{ contains(github.event.head_commit.message, ${{ env.RUN_JOB_YES) }} }}
+    if: ${{ contains(github.event.head_commit.message, 'RUN JOB' }}
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -68,7 +67,7 @@ jobs:
     concurrency: staging
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${{ contains(github.event.head_commit.message, ${{ env.RUN_JOB_NO) }} }}
+    if: ${{ contains(github.event.head_commit.message, 'RUN JOB NOT' }}
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -103,7 +102,7 @@ jobs:
     concurrency: production
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${{ contains(github.event.head_commit.message, ${{ env.RUN_JOB_NO) }} }}
+    if: ${{ contains(github.event.head_commit.message, 'RUN JOB NOT' }}
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -138,7 +137,7 @@ jobs:
     concurrency: start-stop
     runs-on: ubuntu-latest
     needs: [dev-deploy, stage-deploy, prod-deploy]
-    if: ${{ contains(github.event.head_commit.message, ${{ env.RUN_JOB_NO) }} }}
+    if: ${{ contains(github.event.head_commit.message, 'RUN JOB NOT' }}
     steps:
     - name: Stop deployment
       run: echo "Stopping Deployment of RDS MariaDB."
@@ -149,5 +148,3 @@ jobs:
   # INIT
   # PLAN
   # VALIDATE
-  
-  # [skip ci]: skip workflows comment
