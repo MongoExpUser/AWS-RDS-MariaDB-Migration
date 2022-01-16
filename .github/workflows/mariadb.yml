@@ -25,7 +25,7 @@ env:
   APPLY: false
   DESTROY: false
   INIT: true
-  PLAN: true
+  PLAN: false
   VALIDATE: true
       
 jobs:
@@ -57,7 +57,10 @@ jobs:
     - name: Terraform Validate
       run: if [[ $VALIDATE = true ]]; then terraform validate; fi
     - name: Terraform Plan
-      run: if [[ $PLAN = true ]]; then terraform plan -var-file=dev.auto.tfvars; fi
+      run: |
+        cat dev.auto.tfvars <<EOF
+        EOF
+        if [[ $PLAN = true ]]; then terraform plan -var-file=dev.auto.tfvars; fi
     - name: Terraform Apply
       run: if [[ $APPLY = true ]]; then terraform apply -var-file=dev.auto.tfvars -auto-approve; fi
     - name: Terraform Destroy
