@@ -82,4 +82,3 @@ final_snapshot_identifier                 = "mgr-snapshot"
 multi_az                                  = false
 performance_insights_retention_period     = 7
 number_of_replica                         = 1
-
