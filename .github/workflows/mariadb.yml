@@ -9,11 +9,11 @@ on:
   
 env:
   RUN_JOB: true
-  APPLY: false
-  DESTROY: false
-  INIT: false
-  PLAN: false
-  VALIDATE: false
+  APPLY: f${{ env.APPLY }}
+  DESTROY: ${{ env.DESTROY }}
+  INIT: ${{ env.INIT }}
+  PLAN: f${{ env.PLAN }}
+  VALIDATE: ${{ env.VALIDATE }}
     
 defaults:
   run:
@@ -28,7 +28,7 @@ jobs:
     needs: []
     if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }}
     steps:
-    - name: Start deployment
+    - name: Start Deployment
       run: echo "Starting Deployment of RDS MariaDB.".
         
   dev-deploy:
@@ -81,24 +81,24 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: ( ${{ env.INIT }} == true )
+      if: env.INIT == true
       run: terraform init
     - name: Terraform Validate
-      if: ( ${{ env.VALIDATE }} == true )
+      if:  env.VALIDATE == true
       run: terraform validate
     - name: Terraform Variables
-      if: ( ${{ env.PLAN }} == true ) || ( ${{ env.APPLY }} == true )
+      if: (env.PLAN == true) || (env.APPLY == true)
       run: |-
         cat stage.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: ( ${{ env.PLAN }} == true )
+      if: env.PLAN == true
       run: terraform plan
     - name: Terraform Apply
-      if: ( ${{ env.APPLY }} == true )
+      if: env.APPLY == true
       run: terraform apply -var-file=stage.auto.tfvars -auto-approve
     - name: Terraform Destroy
-      if: ( ${{ env.DESTROY }} == true )
+      if: env.DESTROY == true
       run: terraform destroy -auto-approve
     
   prod-deploy:
@@ -116,24 +116,24 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: ( ${{ env.INIT }} == true )
+      if: env.INIT == true
       run: terraform init
     - name: Terraform Validate
-      if: ( ${{ env.VALIDATE }} == true )
+      if:  env.VALIDATE == true
       run: terraform validate
     - name: Terraform Variables
-      if: ( ${{ env.PLAN }} == true ) || ( ${{ env.APPLY }} == true )
+      if: (env.PLAN == true) || (env.APPLY == true)
       run: |-
         cat prod.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: ( ${{ env.PLAN }} == true )
+      if: env.PLAN == true
       run: terraform plan
     - name: Terraform Apply
-      if: ( ${{ env.APPLY }} == true )
+      if: env.APPLY == true
       run: terraform apply -var-file=prod.auto.tfvars -auto-approve
     - name: Terraform Destroy
-      if: ( ${{ env.DESTROY }} == true )
+      if: env.DESTROY == true
       run: terraform destroy -auto-approve
     
   stop:
@@ -144,14 +144,7 @@ jobs:
     needs: [dev-deploy, stage-deploy, prod-deploy]
     if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name != 'push') }}
     steps:
-    - name: Stop deployment
+    - name: Stop Deployment
       run: echo "Stopping Deployment of RDS MariaDB."
    
-  # variables for: development, staging and production environments
-  # APPLY
-  # DESTROY
-  # INIT
-  # PLAN
-  # VALIDATE
-  
   # [skip ci]: skip workflows comment
