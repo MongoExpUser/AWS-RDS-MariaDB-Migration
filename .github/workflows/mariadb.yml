@@ -11,7 +11,7 @@ env:
   APPLY: ${{ secrets.APPLY }}
   DESTROY: ${{ secrets.DESTROY }}
   INIT: ${{ secrets.INIT }}
-  PLAN: ${{ secrets.PLAN }}
+  PLAN: ${{ env.PLAN }}
   VALIDATE: ${{ secrets.VALIDATE }}
     
 defaults:
