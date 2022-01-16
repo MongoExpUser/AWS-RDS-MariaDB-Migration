@@ -55,25 +55,30 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: $INIT == true
-      run: terraform init
-    - name: Terraform Validate
-      if:  $VALIDATE == true
-      run: terraform validate
-    - name: Terraform Variables
-      if: ($PLAN == true) || ($APPLY == true)
       run: |-
+        if: $INIT == true
+        terraform init
+    - name: Terraform Validate
+      run: |-
+        if: $VALIDATE == true
+        terraform validate
+    - name: Terraform Variables
+      run: |-
+        if:($PLAN == true) || ($APPLY == true)
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: $PLAN == true
-      run: terraform plan
+      run: |-
+        if: $PLAN == true
+        terraform plan
     - name: Terraform Apply
-      if: $APPLY == true
-      run: terraform apply -var-file=dev.auto.tfvars -auto-approve
+      run: |-
+        if: $APPLY == true
+        terraform apply -var-file=dev.auto.tfvars -auto-approve
     - name: Terraform Destroy
-      if: $DESTROY == true
-      run: terraform destroy -auto-approve
+      run: |-
+        if: $DESTROY == true
+        terraform destroy -auto-approve
       
   stage-deploy:
     name: stage-deploy
@@ -157,4 +162,4 @@ jobs:
     - name: Stop Deployment
       run: echo "Stopping Deployment of RDS MariaDB."
    
-  # [skip ci]: skip workflows comment 
+  # [skip ci]: skip workflows comment
