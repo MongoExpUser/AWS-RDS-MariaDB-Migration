@@ -21,13 +21,6 @@ defaults:
   run:
     shell: bash
 
-env:
-  APPLY: false
-  DESTROY: false
-  INIT: true
-  PLAN: true
-  VALIDATE: false
-
 jobs:
   start:
     name: start
@@ -41,6 +34,12 @@ jobs:
       run: echo "Starting Deployment of RDS MariaDB.".
 
   dev-deploy:
+    env:
+      APPLY: false
+      DESTROY: false
+      INIT: true
+      PLAN: true
+      VALIDATE: false
     name: dev-deploy
     environment: development
     concurrency: development
