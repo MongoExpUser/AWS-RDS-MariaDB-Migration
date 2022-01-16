@@ -61,7 +61,7 @@ jobs:
          cat dev.auto.tfvars <<EOF
          EOF
     - name: Terraform Plan
-      run: if [[ $PLAN = true ]]; then terraform plan -auto-approve;; fi
+      run: if [[ $PLAN = true ]]; then terraform plan -auto-approve; fi
     - name: Terraform Apply
       run: if [[ $APPLY = true ]]; then terraform apply -var-file=dev.auto.tfvars -auto-approve; fi
     - name: Terraform Destroy
