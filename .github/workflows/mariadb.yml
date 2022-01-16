@@ -35,7 +35,7 @@ jobs:
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: (github.ref == 'refs/heads/main') && (github.event_name != 'push')
+    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push') && ( ${{ env.RUN_JOB }} == true )
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
@@ -44,22 +44,112 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: ${{ secrets.INIT }} == true
+      if: ( ${{ env.INIT }} == true )
       run: terraform init
     - name: Terraform Validate
-      if: ${{ env.VALIDATE }} == true
+      if: ( ${{ env.VALIDATE }} == true )
       run: terraform validate
     - name: Terraform Variables
-      if: ${{ env.PLAN }} == true || ${{ env.APPLY }} == true
+      if: ( ${{ env.PLAN }} == true ) || ( ${{ env.APPLY }} == true )
       run: |-
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: ${{ env.PLAN }} == true
+      if: ( ${{ env.PLAN }} == true )
       run: terraform plan
     - name: Terraform Apply
-      if: ${{ env.APPLY }} == true
+      if: ( ${{ env.APPLY }} == true )
       run: terraform apply -var-file=dev.auto.tfvars -auto-approve
     - name: Terraform Destroy
-      if: ${{ env.DESTROY }} == true
+      if: ( ${{ env.DESTROY }} == true )
       run: terraform destroy -auto-approve
+      
+  stage-deploy:
+    name: stage-deploy
+    environment: staging
+    concurrency: staging
+    runs-on: ubuntu-latest
+    needs: [start]
+    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push') && ( ${{ env.RUN_JOB }} == true )
+    steps:
+    - name: GitHub Actions Runner Set-up
+      uses: actions/checkout@v2
+    #- name: Terraform Repo Security Scan Set-up
+    #  uses: triat/terraform-security-scan@v3
+    - name: Terraform CLI Set-up
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Init
+      if: ( ${{ env.INIT }} == true )
+      run: terraform init
+    - name: Terraform Validate
+      if: ( ${{ env.VALIDATE }} == true )
+      run: terraform validate
+    - name: Terraform Variables
+      if: ( ${{ env.PLAN }} == true ) || ( ${{ env.APPLY }} == true )
+      run: |-
+        cat stage.auto.tfvars <<EOF
+        EOF
+    - name: Terraform Plan
+      if: ( ${{ env.PLAN }} == true )
+      run: terraform plan
+    - name: Terraform Apply
+      if: ( ${{ env.APPLY }} == true )
+      run: terraform apply -var-file=stage.auto.tfvars -auto-approve
+    - name: Terraform Destroy
+      if: ( ${{ env.DESTROY }} == true )
+      run: terraform destroy -auto-approve
+    
+  prod-deploy:
+    name: prod-deploy
+    environment: production
+    concurrency: production
+    runs-on: ubuntu-latest
+    needs: [start]
+    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push') && ( ${{ env.RUN_JOB }} == true )
+    steps:
+    - name: GitHub Actions Runner Set-up
+      uses: actions/checkout@v2
+    #- name: Terraform Repo Security Scan Set-up
+    #  uses: triat/terraform-security-scan@v3
+    - name: Terraform CLI Set-up
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Init
+      if: ( ${{ env.INIT }} == true )
+      run: terraform init
+    - name: Terraform Validate
+      if: ( ${{ env.VALIDATE }} == true )
+      run: terraform validate
+    - name: Terraform Variables
+      if: ( ${{ env.PLAN }} == true ) || ( ${{ env.APPLY }} == true )
+      run: |-
+        cat prod.auto.tfvars <<EOF
+        EOF
+    - name: Terraform Plan
+      if: ( ${{ env.PLAN }} == true )
+      run: terraform plan
+    - name: Terraform Apply
+      if: ( ${{ env.APPLY }} == true )
+      run: terraform apply -var-file=prod.auto.tfvars -auto-approve
+    - name: Terraform Destroy
+      if: ( ${{ env.DESTROY }} == true )
+      run: terraform destroy -auto-approve
+    
+  stop:
+    name: stop
+    environment: start-stop
+    concurrency: start-stop
+    runs-on: ubuntu-latest
+    needs: [dev-deploy, stage-deploy, prod-deploy]
+    if: (github.ref == 'refs/heads/main') && (github.event_name == 'push') && ( ${{ env.RUN_JOB }} == true )
+    steps:
+    - name: Stop deployment
+      run: echo "Stopping Deployment of RDS MariaDB."
+   
+  # [skip ci]
+  # variables for: development, staging and production environments
+  # APPLY
+  # DESTROY
+  # INIT
+  # PLAN
+  # RUN_JOB
+  # VALIDATE
