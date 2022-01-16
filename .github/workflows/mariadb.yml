@@ -37,7 +37,7 @@ jobs:
     concurrency: development
     runs-on: ubuntu-latest
     needs: [start]
-    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }} && (env.RUN_JOB == true)
+    if: ${{ (github.ref == 'refs/heads/main')  && (github.event_name == 'push') }} && ( ${{ env.RUN_JOB }} == true)
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
