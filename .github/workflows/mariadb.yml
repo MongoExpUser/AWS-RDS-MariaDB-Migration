@@ -1,3 +1,13 @@
+# ******************************************************************************************************************
+# *                                                                                                                *
+# *  Project: Migration Project                                                                                    *
+# *                                                                                                                *
+# *  Copyright © 2022 MongoExpUser. All Rights Reserved.                                                           *
+# *                                                                                                                *
+# *                                                                                                                *
+# ******************************************************************************************************************
+
+
 name: CI - MariaDB Migration
 
 on:
@@ -8,11 +18,11 @@ on:
   # matches pull request for all branches and tag name
   
 env:
-  APPLY: ${{ secrets.APPLY }}
-  DESTROY: ${{ secrets.DESTROY }}
-  INIT: ${{ secrets.INIT }}
-  PLAN: ${{ env.PLAN }}
-  VALIDATE: ${{ secrets.VALIDATE }}
+  APPLY: false
+  DESTROY: false
+  INIT: true
+  PLAN: true
+  VALIDATE: false
     
 defaults:
   run:
@@ -29,9 +39,7 @@ jobs:
     steps:
     - name: Start Deployment
       run: echo "Starting Deployment of RDS MariaDB.".
-    - name: Confirm Plan
-      run: echo $PLAN
-        
+
   dev-deploy:
     name: dev-deploy
     environment: development
@@ -47,24 +55,24 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: env.INIT == true
+      if: $INIT == true
       run: terraform init
     - name: Terraform Validate
-      if:  env.VALIDATE == true
+      if:  $VALIDATE == true
       run: terraform validate
     - name: Terraform Variables
-      if: (env.PLAN == true) || (env.APPLY == true)
+      if: ($PLAN == true) || ($APPLY == true)
       run: |-
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: env.PLAN == true
+      if: $PLAN == true
       run: terraform plan
     - name: Terraform Apply
-      if: env.APPLY == true
+      if: $APPLY == true
       run: terraform apply -var-file=dev.auto.tfvars -auto-approve
     - name: Terraform Destroy
-      if: env.DESTROY == true
+      if: $DESTROY == true
       run: terraform destroy -auto-approve
       
   stage-deploy:
@@ -82,24 +90,24 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: env.INIT == true
+      if: $INIT == true
       run: terraform init
     - name: Terraform Validate
-      if:  env.VALIDATE == true
+      if:  $VALIDATE == true
       run: terraform validate
     - name: Terraform Variables
-      if: (env.PLAN == true) || (env.APPLY == true)
+      if: ($PLAN == true) || ($APPLY == true)
       run: |-
         cat stage.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: env.PLAN == true
+      if: $PLAN == true
       run: terraform plan
     - name: Terraform Apply
-      if: env.APPLY == true
+      if: $APPLY == true
       run: terraform apply -var-file=stage.auto.tfvars -auto-approve
     - name: Terraform Destroy
-      if: env.DESTROY == true
+      if: $DESTROY == true
       run: terraform destroy -auto-approve
     
   prod-deploy:
@@ -117,24 +125,24 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: env.INIT == true
+      if: $INIT == true
       run: terraform init
     - name: Terraform Validate
-      if:  env.VALIDATE == true
+      if:  $VALIDATE == true
       run: terraform validate
     - name: Terraform Variables
-      if: (env.PLAN == true) || (env.APPLY == true)
+      if: ($PLAN == true) || ($APPLY == true)
       run: |-
         cat prod.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: env.PLAN == true
+      if: $PLAN == true
       run: terraform plan
     - name: Terraform Apply
-      if: env.APPLY == true
+      if: $APPLY == true
       run: terraform apply -var-file=prod.auto.tfvars -auto-approve
     - name: Terraform Destroy
-      if: env.DESTROY == true
+      if: $DESTROY == true
       run: terraform destroy -auto-approve
     
   stop:
