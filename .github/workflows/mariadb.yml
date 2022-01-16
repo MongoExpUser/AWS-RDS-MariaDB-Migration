@@ -57,11 +57,11 @@ jobs:
     - name: Terraform Validate
       run: if [[ $VALIDATE = true ]]; then terraform validate; fi
     - name: Terraform Variables
-      run: |-
+      run: |
          cat dev.auto.tfvars <<EOF
          EOF
     - name: Terraform Plan
-      run: -|'
+      run: |
         pwd
         ls
         if [[ $PLAN = true ]]; then terraform plan; fi
