@@ -50,21 +50,19 @@ jobs:
     steps:
     - name: GitHub Actions Runner Set-up
       uses: actions/checkout@v2
-    #- name: Terraform Repo Security Scan Set-up
-    #  uses: triat/terraform-security-scan@v3
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
-    #- name: Terraform Init
-    #  run: if [[ $INIT = true ]]; then terraform init; fi
-    #- name: Terraform Validate
-    #  run: if [[ $VALIDATE = true ]]; then terraform validate; fi
+    - name: Terraform Init
+      run: if [[ $INIT = true ]]; then terraform init; fi
+    - name: Terraform Validate
+      run: if [[ $VALIDATE = true ]]; then terraform validate; fi
     - name: Terraform Variables
       run: |-
          cat dev.auto.tfvars <<EOF
          EOF
     - name: Terraform Plan
-      run: if [[ $PLAN = true ]]; then terraform init; terraform validate; terraform plan -var-file=dev.auto.tfvars; fi
+      run: if [[ $PLAN = true ]]; then terraform plan -var-file=dev.auto.tfvars; fi
     - name: Terraform Apply
-      run: if [[ $APPLY = true ]]; then then terraform init; terraform validate; terraform apply -var-file=dev.auto.tfvars -auto-approve; fi
+      run: if [[ $APPLY = true ]]; then terraform apply -var-file=dev.auto.tfvars -auto-approve; fi
     - name: Terraform Destroy
-      run: if [[ $DESTROY = true ]]; then terraform init; terraform validate; terraform destroy -auto-approve; fi
+      run: if [[ $DESTROY = true ]]; then terraform destroy -auto-approve; fi
