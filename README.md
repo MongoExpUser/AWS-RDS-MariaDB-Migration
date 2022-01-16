@@ -14,7 +14,7 @@ This README summaries the contents of this repository.
 * AWS VPC security group 
 * AWS secret manager secret
 * AWS RDS enhanced monitoring IAM role 
-* AWS RDS PostgreSQL DB instance 
+* AWS RDS PostgreSQL DB instance(s) 
 
 ### Repo usage ###
 * Database migration
