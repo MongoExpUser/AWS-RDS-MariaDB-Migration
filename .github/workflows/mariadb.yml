@@ -10,8 +10,8 @@ on:
 env:
   APPLY: ${{ secrets.APPLY }}
   DESTROY: ${{ secrets.DESTROY }}
-  INIT: ${{ secrets.INIT }}
-  PLAN: f${{ secrets.PLAN }}
+  INIT: true
+  PLAN: true
   VALIDATE: ${{ secrets.VALIDATE }}
     
 defaults:
