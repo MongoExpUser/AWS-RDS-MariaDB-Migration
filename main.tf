@@ -27,6 +27,7 @@
 
 
 # configure provider(s) and backend
+
 terraform {
 
   required_providers {
@@ -39,21 +40,20 @@ terraform {
     }
   }
 
- 
   backend "local" {
 
   }
   
   /*
   backend "s3" {
-    bucket  = "comp-bck-name"
+    bucket  = "aws-tf-states"
     key     = "rds-mariadb/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
   }
   */
-  
 }
+
 
 # local variables
 locals {
