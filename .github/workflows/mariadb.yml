@@ -22,7 +22,7 @@ defaults:
     shell: bash
     
 env:
-  APPLY: ${{ secrets.APPLY }}
+  APPLY: false
   DESTROY: false
   INIT: true
   PLAN: true
