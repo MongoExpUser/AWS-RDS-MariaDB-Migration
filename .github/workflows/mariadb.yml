@@ -9,6 +9,11 @@ on:
   
 env:
   RUN_JOB: true
+  APPLY: false
+  DESTROY: false
+  INIT: false
+  PLAN: false
+  VALIDATE: false
     
 defaults:
   run:
@@ -41,24 +46,24 @@ jobs:
     - name: Terraform CLI Set-up
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
-      if: ( ${{ env.INIT }} == true )
+      if: env.INIT == true
       run: terraform init
     - name: Terraform Validate
-      if: ( ${{ env.VALIDATE }} == true )
+      if:  env.VALIDATE == true
       run: terraform validate
     - name: Terraform Variables
-      if: ( ${{ env.PLAN == true }} ) || ( ${{ env.APPLY == true }} )
+      if: (env.PLAN == true) || (env.APPLY == true)
       run: |-
         cat dev.auto.tfvars <<EOF
         EOF
     - name: Terraform Plan
-      if: ( ${{ env.PLAN == true }} )
+      if: env.PLAN == true
       run: terraform plan
     - name: Terraform Apply
-      if: ( ${{ env.APPLY == true }} )
+      if: env.APPLY == true
       run: terraform apply -var-file=dev.auto.tfvars -auto-approve
     - name: Terraform Destroy
-      if: ( ${{ env.DESTROY == true }} )
+      if: env.DESTROY == true
       run: terraform destroy -auto-approve
       
   stage-deploy:
