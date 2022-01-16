@@ -25,7 +25,7 @@ env:
   APPLY: false
   DESTROY: false
   INIT: true
-  PLAN: false
+  PLAN: true
   VALIDATE: true
       
 jobs:
