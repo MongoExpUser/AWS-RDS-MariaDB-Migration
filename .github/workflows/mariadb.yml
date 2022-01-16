@@ -27,8 +27,7 @@ jobs:
     if: (github.ref == 'refs/heads/main') && (github.event_name == 'push')
     steps:
     - name: Start deployment
-      run: | -
-        echo "Starting Deployment of RDS MariaDB into " + ${{ secrets.AWS_REGION }} + " region."
+      run: echo "Starting Deployment of RDS MariaDB into " + ${{ secrets.AWS_REGION }} + " region."
         
   dev-deploy:
     name: dev-deploy
