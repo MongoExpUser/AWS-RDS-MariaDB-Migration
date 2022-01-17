@@ -22,8 +22,8 @@ defaults:
     shell: bash
     
 env:
-  APPLY: false
-  DESTROY: true
+  APPLY: true
+  DESTROY: false
   INIT: true
   PLAN: false
   VALIDATE: false
