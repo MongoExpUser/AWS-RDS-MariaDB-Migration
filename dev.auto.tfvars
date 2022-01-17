@@ -15,7 +15,7 @@ org_identifier                            = "org"
 project_name                              = "mgr"
 region                                    = "us-east-1"
 creator                                   = "Terraform"
-environment                               = "dev"
+environment                               = "devo"
 map_dba                                   = "map-dba"
 
 # 1. db subnet group variables
