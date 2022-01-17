@@ -22,11 +22,11 @@ defaults:
     shell: bash
     
 env:
-  APPLY: false
+  APPLY: true
   DESTROY: false
   INIT: true
-  PLAN: true
-  VALIDATE: true
+  PLAN: false
+  VALIDATE: false
   # set-up AWS credentials at workflow level
   AWS_REGION: ${{ secrets.AWS_REGION }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
