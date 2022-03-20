@@ -288,9 +288,15 @@ resource "aws_db_instance" "replica_instance" {
   enabled_cloudwatch_logs_exports       = var.enabled_cloudwatch_logs_exports
   performance_insights_retention_period = var.performance_insights_retention_period
   
-  tags = {
-    name                                = "${var.org_identifier}-${var.environment}-${var.instance_identifier}-replica-${count.index}"
-    creator                             = var.creator
-  }
+
+  tags = merge(
+    {
+        name                            = "${var.org_identifier}-${var.environment}-${var.instance_identifier}-replica-${count.index}"
+    },
+    {
+        creator                         = var.creator
+    },
+    local.aws_tags
+  )
 }
 
